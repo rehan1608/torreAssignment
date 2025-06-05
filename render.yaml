@@ -3,8 +3,9 @@ services:
     name: torre-frontend
     env: node
     buildCommand: |
-      export NODE_OPTIONS=--max_old_space_size=2048
-      npm install --legacy-peer-deps
+      npm install -g npm@10
+      npm install -g react-scripts
+      npm install --force
       npm run build
     staticPublishPath: ./build
     envVars:
@@ -16,3 +17,5 @@ services:
         value: false
       - key: DISABLE_ESLINT_PLUGIN
         value: true
+      - key: NODE_OPTIONS
+        value: --max_old_space_size=2048
