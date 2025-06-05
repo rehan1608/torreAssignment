@@ -14,3 +14,6 @@ sourceDirectory = "backend"
 [variables]
 PYTHON_VERSION = "3.12.0"
 NIXPACKS_PYTHON_VERSION = "3.12.0"
+
+[phases.setup]
+nixPkgs = ["python312"]
