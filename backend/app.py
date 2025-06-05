@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import requests
 import html
@@ -120,5 +120,10 @@ def get_user_details(username):
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
 
+@app.route('/api/search/test', methods=['GET'])
+def test():
+    return jsonify({"message": "Backend is working!"})
+
 if __name__ == '__main__':
-    app.run(debug=True) 
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port) 
