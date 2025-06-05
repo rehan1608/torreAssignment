@@ -1,7 +1,0 @@
-# Include everything needed for the build
-!build/
-!src/
-!public/
-!package.json
-!package-lock.json
-!tsconfig.json 
