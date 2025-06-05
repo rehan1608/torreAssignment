@@ -1,0 +1,406 @@
+.App {
+  text-align: center;
+  min-height: 100vh;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: clamp(20px, 5vw, 40px);
+  font-size: clamp(14px, 2vw, 18px);
+  color: white;
+}
+
+h1 {
+  font-size: clamp(24px, 4vw, 36px);
+  margin: 0 0 20px 0;
+}
+
+.search-form {
+  display: flex;
+  gap: clamp(8px, 2vw, 15px);
+  margin-top: clamp(15px, 3vw, 25px);
+  width: 100%;
+  max-width: min(90vw, 600px);
+}
+
+.search-input {
+  padding: clamp(8px, 2vw, 15px);
+  font-size: clamp(14px, 2vw, 18px);
+  border: none;
+  border-radius: 4px;
+  width: 100%;
+  outline: none;
+}
+
+.search-button {
+  padding: clamp(8px, 2vw, 15px);
+  font-size: clamp(14px, 2vw, 18px);
+  background-color: #61dafb;
+  border: none;
+  border-radius: 4px;
+  color: #282c34;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  min-width: 100px;
+}
+
+.search-button:hover:not(:disabled) {
+  background-color: #4fa8c6;
+}
+
+.search-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.loading {
+  margin-top: 20px;
+  color: #61dafb;
+}
+
+.error-message {
+  margin-top: 20px;
+  color: #ff6b6b;
+  font-size: 18px;
+}
+
+.results-list {
+  margin-top: clamp(20px, 4vw, 30px);
+  width: 100%;
+  max-width: min(90vw, 600px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2vw, 15px);
+}
+
+.person-card {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: clamp(12px, 2.5vw, 20px);
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.person-card:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.person-card-content {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2vw, 15px);
+}
+
+.person-card-image {
+  width: clamp(50px, 10vw, 60px);
+  height: clamp(50px, 10vw, 60px);
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #61dafb;
+  background-color: rgba(97, 218, 251, 0.1);
+  flex-shrink: 0;
+}
+
+.person-card h3 {
+  margin: 0;
+  color: #61dafb;
+  font-size: clamp(16px, 2.5vw, 20px);
+}
+
+.person-card-headline {
+  margin: 5px 0;
+  font-size: clamp(12px, 1.8vw, 14px);
+  color: #e2e2e2;
+}
+
+.person-card-click {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #b8b8b8;
+  font-style: italic;
+}
+
+.person-card-info {
+  text-align: left;
+  flex: 1;
+}
+
+.detail-container {
+  margin-top: clamp(30px, 5vw, 40px);
+  padding: clamp(15px, 3vw, 25px);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  max-width: min(90vw, 600px);
+  width: 100%;
+  position: relative;
+}
+
+.back-button {
+  position: absolute;
+  top: clamp(-50px, -5vw, -40px);
+  left: 0;
+  padding: clamp(6px, 1.5vw, 10px) clamp(10px, 2vw, 15px);
+  font-size: clamp(14px, 1.8vw, 16px);
+  background-color: transparent;
+  border: 2px solid #61dafb;
+  border-radius: 4px;
+  color: #61dafb;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  background-color: rgba(97, 218, 251, 0.1);
+}
+
+.profile-picture {
+  width: clamp(100px, 20vw, 150px);
+  height: clamp(100px, 20vw, 150px);
+  border-radius: 50%;
+  margin-bottom: clamp(15px, 3vw, 25px);
+  border: 3px solid #61dafb;
+  background-color: rgba(97, 218, 251, 0.1);
+  object-fit: cover;
+}
+
+.location {
+  font-size: clamp(14px, 2vw, 16px);
+  color: #b8b8b8;
+  margin: clamp(8px, 1.5vw, 10px) 0;
+}
+
+.headline {
+  font-size: clamp(16px, 2.2vw, 18px);
+  color: #e2e2e2;
+  margin: clamp(8px, 1.5vw, 10px) 0;
+}
+
+.bio {
+  font-size: clamp(14px, 2vw, 16px);
+  color: #b8b8b8;
+  line-height: 1.6;
+  margin: clamp(12px, 2.5vw, 20px) 0 0 0;
+  text-align: left;
+}
+
+.bio p {
+  margin: 0 0 12px 0;
+}
+
+.bio p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 480px) {
+  .search-form {
+    flex-direction: column;
+  }
+
+  .search-input {
+    max-width: 100%;
+  }
+
+  .search-button {
+    width: 100%;
+  }
+
+  .person-card-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+  }
+
+  .person-card-info {
+    text-align: left;
+  }
+
+  .person-card-image {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+  }
+
+  .back-button {
+    position: static;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+
+  .detail-container {
+    margin-top: 20px;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .page-numbers {
+    order: -1;
+    margin-bottom: 10px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .search-button {
+    min-width: 120px;
+  }
+
+  .pagination {
+    gap: 15px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .App-header {
+    padding: 30px;
+  }
+}
+
+@media (max-height: 480px) and (orientation: landscape) {
+  .App-header {
+    padding: 15px;
+  }
+
+  .profile-picture {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px;
+  }
+
+  .detail-container {
+    margin-top: 15px;
+    padding: 15px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .App-header {
+    padding: 50px;
+  }
+
+  .detail-container,
+  .results-list {
+    max-width: 800px;
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: clamp(15px, 3vw, 25px);
+  gap: clamp(5px, 1.5vw, 10px);
+  width: 100%;
+  max-width: min(90vw, 600px);
+  padding: clamp(10px, 2vw, 15px);
+  flex-wrap: wrap;
+}
+
+.pagination-button {
+  padding: clamp(6px, 1.5vw, 10px) clamp(10px, 2vw, 16px);
+  font-size: clamp(14px, 1.8vw, 16px);
+  min-width: 80px;
+}
+
+.page-numbers {
+  display: flex;
+  gap: clamp(3px, 1vw, 5px);
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.page-number {
+  padding: clamp(6px, 1.5vw, 8px) clamp(8px, 2vw, 12px);
+  font-size: clamp(14px, 1.8vw, 16px);
+  min-width: clamp(30px, 5vw, 40px);
+}
+
+.social-links {
+  display: flex;
+  gap: clamp(10px, 2vw, 15px);
+  justify-content: center;
+  margin: clamp(15px, 3vw, 20px) 0;
+  flex-wrap: wrap;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(35px, 6vw, 40px);
+  height: clamp(35px, 6vw, 40px);
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: clamp(16px, 2.2vw, 18px);
+}
+
+.social-link svg {
+  width: clamp(16px, 3vw, 20px);
+  height: clamp(16px, 3vw, 20px);
+}
+
+.social-link:not(:has(svg)) {
+  font-size: clamp(14px, 2vw, 16px);
+  line-height: 1;
+}
+
+.social-link:hover {
+  transform: translateY(-3px);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Social media specific colors on hover */
+.social-link.twitter:hover {
+  background-color: #000000;
+  color: white;
+}
+
+.social-link.github:hover {
+  background-color: #333;
+  color: white;
+}
+
+.social-link.linkedin:hover {
+  background-color: #0077B5;
+  color: white;
+}
+
+.social-link.instagram:hover {
+  background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+  color: white;
+}
+
+.social-link.facebook:hover {
+  background-color: #1877F2;
+  color: white;
+}
+
+.social-link.medium:hover {
+  background-color: #000000;
+  color: white;
+}
+
+.social-link.youtube:hover {
+  background-color: #FF0000;
+  color: white;
+}
+
+/* Remove these classes as they're no longer needed */
+.person-card-image.default-profile,
+.profile-picture.default-profile,
+.default-profile {
+  display: none;
+} 
