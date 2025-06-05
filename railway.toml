@@ -2,13 +2,13 @@
 builder = "python"
 
 [deploy]
-startCommand = "gunicorn app:app"
+startCommand = "cd backend && gunicorn app:app --bind 0.0.0.0:$PORT"
 healthcheckPath = "/api/search/test"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
 
 [service]
-sourceDirectory = "backend"
+sourceDirectory = "."
 
 [variables]
 NIXPACKS_PYTHON_VERSION = "3.12.0"
