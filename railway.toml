@@ -3,7 +3,7 @@ builder = "nixpacks"
 buildCommand = "pip install -r backend/requirements.txt"
 
 [deploy]
-startCommand = "cd backend && gunicorn app:app"
+startCommand = "cd backend && gunicorn app:app" # assumes app.py defines app = Flask(...)
 healthcheckPath = "/api/search/test"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
@@ -13,4 +13,4 @@ sourceDirectory = "."
 
 [variables]
 PYTHON_VERSION = "3.12.0"
-NIXPACKS_PYTHON_VERSION = "3.12.0" 
+NIXPACKS_PYTHON_VERSION = "3.12.0"
