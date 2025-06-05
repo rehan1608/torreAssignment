@@ -5,11 +5,15 @@ import html
 import urllib.parse
 import json
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": [
     "http://localhost:3000",
-    "https://torre-frontend.onrender.com"
+    "https://torre-search-app.netlify.app",  # Add your Netlify domain here
+    os.getenv("FRONTEND_URL", "")  # Allow configuring additional domains via env var
 ]}})
 
 @app.route('/api/search/<name>')
