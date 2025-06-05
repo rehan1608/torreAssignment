@@ -10,11 +10,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": [
-    "http://localhost:3000",
-    "https://torre-search-app.netlify.app",  # Add your Netlify domain here
-    os.getenv("FRONTEND_URL", "")  # Allow configuring additional domains via env var
-]}})
+CORS(app)
+
+@app.route('/')
+def home():
+    return jsonify({"message": "Welcome to Torre Search API"})
 
 @app.route('/api/search/<name>')
 def search_users(name):
