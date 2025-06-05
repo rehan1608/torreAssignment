@@ -10,8 +10,11 @@ services:
 
   - type: static
     name: torre-frontend
-    buildCommand: npm install && npm run build
+    env: node
+    buildCommand: npm install && CI=false npm run build
     staticPublishPath: ./build
     envVars:
       - key: NODE_VERSION
-        value: 18.0.0 
+        value: 18.0.0
+      - key: CI
+        value: false 

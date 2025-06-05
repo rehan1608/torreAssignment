@@ -10,7 +10,7 @@ import {
   faMedium,
   faYoutube
 } from '@fortawesome/free-brands-svg-icons';
-import { faLink, faUser } from '@fortawesome/free-solid-svg-icons';
+
 
 interface Person {
   username: string;
