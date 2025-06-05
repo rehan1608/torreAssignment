@@ -1,15 +1,15 @@
 [build]
-nixpacksEnabled = true
 builder = "nixpacks"
+buildCommand = "pip install -r backend/requirements.txt"
 
 [deploy]
-startCommand = "gunicorn app:app"
+startCommand = "cd backend && gunicorn app:app"
 healthcheckPath = "/api/search/test"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
 
 [service]
-sourceDirectory = "backend"
+sourceDirectory = "."
 
 [variables]
 PYTHON_VERSION = "3.12.0"
