@@ -37,9 +37,7 @@ interface PaginationInfo {
   items_per_page: number;
 }
 
-const BACKEND_URL = process.env.NODE_ENV === 'production'
-  ? 'https://torre-backend.onrender.com'
-  : 'http://localhost:5000';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
