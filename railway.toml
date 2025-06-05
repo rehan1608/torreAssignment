@@ -9,7 +9,7 @@ healthcheckTimeout = 100
 restartPolicyType = "on_failure"
 
 [service]
-sourceDirectory = "."
+sourceDirectory = "backend"
 
 [variables]
 PYTHON_VERSION = "3.12.0"
