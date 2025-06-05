@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -9,12 +9,8 @@ import {
   Grid,
   CircularProgress,
   Avatar,
-  IconButton,
   Pagination,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogActions,
+  IconButton,
 } from '@mui/material';
 import { Search as SearchIcon, ArrowBack as ArrowBackIcon } from '@mui/icons-material';
 import { useSearch } from '../hooks/useSearch';
@@ -22,7 +18,7 @@ import { useSearch } from '../hooks/useSearch';
 const SearchComponent: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [isDetailView, setIsDetailView] = useState(false);
   
   const {
     isLoading,
@@ -31,25 +27,40 @@ const SearchComponent: React.FC = () => {
     selectedUser,
     searchUsers,
     getUserDetails,
-    clearSearch
+    clearSearch,
   } = useSearch();
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      clearSearch();
+    }
+  }, [searchQuery, clearSearch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      await searchUsers(searchQuery.trim());
       setPage(1);
+      await searchUsers(searchQuery.trim());
+    } else {
+      clearSearch();
+    }
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setSearchQuery(newValue);
+    if (!newValue.trim()) {
+      clearSearch();
     }
   };
 
   const handleUserClick = async (username: string) => {
     await getUserDetails(username);
-    setDialogOpen(true);
+    setIsDetailView(true);
   };
 
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
-    clearSearch();
+  const handleBackToSearch = () => {
+    setIsDetailView(false);
   };
 
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
@@ -68,6 +79,62 @@ const SearchComponent: React.FC = () => {
 
   const showPagination = searchResults?.results && searchResults.results.length > 0;
 
+  if (isDetailView && selectedUser) {
+    return (
+      <Box sx={{ width: '100%', mt: 4 }}>
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={handleBackToSearch}
+          variant="contained"
+          sx={{ mb: 3 }}
+        >
+          Back to Search
+        </Button>
+        <Card sx={{ p: 3 }}>
+          <Box sx={{ textAlign: 'center' }}>
+            <Avatar
+              src={selectedUser.picture}
+              alt={selectedUser.name}
+              sx={{ width: 150, height: 150, mx: 'auto', mb: 3 }}
+            />
+            <Typography variant="h4" gutterBottom>
+              {selectedUser.name}
+            </Typography>
+            <Typography variant="h6" gutterBottom sx={{ color: 'text.secondary' }}>
+              {selectedUser.professionalHeadline}
+            </Typography>
+            <Typography variant="body1" color="text.secondary" gutterBottom>
+              {selectedUser.location}
+            </Typography>
+            <Typography variant="body1" paragraph sx={{ mt: 2 }}>
+              {selectedUser.summaryOfBio}
+            </Typography>
+            {selectedUser.links && (
+              <Box sx={{ mt: 3 }}>
+                <Typography variant="h6" gutterBottom>
+                  Links
+                </Typography>
+                {selectedUser.links.map((link) => (
+                  <Button
+                    key={link.id}
+                    href={link.address}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="outlined"
+                    size="small"
+                    sx={{ m: 0.5 }}
+                  >
+                    {link.name}
+                  </Button>
+                ))}
+              </Box>
+            )}
+          </Box>
+        </Card>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ width: '100%', mt: 4 }}>
       <Typography variant="h3" component="h1" gutterBottom align="center" sx={{ color: 'white', mb: 4 }}>
@@ -79,7 +146,7 @@ const SearchComponent: React.FC = () => {
           <TextField
             fullWidth
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={handleSearchChange}
             placeholder="Search by name (e.g. John)..."
             variant="outlined"
             sx={{ 
@@ -95,7 +162,7 @@ const SearchComponent: React.FC = () => {
           <Button
             type="submit"
             variant="contained"
-            disabled={isLoading}
+            disabled={isLoading || !searchQuery.trim()}
             startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <SearchIcon />}
             sx={{ px: 4 }}
           >
@@ -110,111 +177,67 @@ const SearchComponent: React.FC = () => {
         </Typography>
       )}
 
-      <Grid container spacing={2}>
-        {getCurrentPageItems().map((person) => (
-          <Grid item xs={12} key={person.username}>
-            <Card 
-              sx={{ 
-                cursor: 'pointer',
-                '&:hover': {
-                  boxShadow: 6,
-                  transform: 'scale(1.01)',
-                  transition: 'all 0.2s ease-in-out',
-                },
-              }}
-              onClick={() => handleUserClick(person.username)}
-            >
-              <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Avatar
-                  src={person.picture}
-                  alt={person.name}
-                  sx={{ width: 60, height: 60 }}
-                />
-                <Box>
-                  <Typography variant="h6">{person.name}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {person.professionalHeadline}
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-
-      {showPagination && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handlePageChange}
-            color="primary"
-            sx={{ 
-              '& .MuiPaginationItem-root': {
-                color: 'white',
-                '&.Mui-selected': {
-                  backgroundColor: 'white',
-                  color: 'primary.main',
-                },
-              },
-            }}
-          />
-        </Box>
+      {searchQuery.trim() && searchResults?.results && searchResults.results.length === 0 && (
+        <Typography align="center" sx={{ color: 'white', mt: 4 }}>
+          No results found for "{searchQuery}"
+        </Typography>
       )}
 
-      <Dialog
-        open={dialogOpen}
-        onClose={handleCloseDialog}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <IconButton onClick={handleCloseDialog} size="small">
-            <ArrowBackIcon />
-          </IconButton>
-          {selectedUser?.name}
-        </DialogTitle>
-        <DialogContent>
-          {selectedUser && (
-            <Box sx={{ textAlign: 'center' }}>
-              <Avatar
-                src={selectedUser.picture}
-                alt={selectedUser.name}
-                sx={{ width: 120, height: 120, mx: 'auto', mb: 2 }}
+      {searchResults?.results && searchResults.results.length > 0 && (
+        <>
+          <Grid container spacing={2}>
+            {getCurrentPageItems().map((person) => (
+              <Grid item xs={12} key={person.username}>
+                <Card 
+                  sx={{ 
+                    cursor: 'pointer',
+                    '&:hover': {
+                      boxShadow: 6,
+                      transform: 'scale(1.01)',
+                      transition: 'all 0.2s ease-in-out',
+                    },
+                  }}
+                  onClick={() => handleUserClick(person.username)}
+                >
+                  <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Avatar
+                      src={person.picture}
+                      alt={person.name}
+                      sx={{ width: 60, height: 60 }}
+                    />
+                    <Box>
+                      <Typography variant="h6">{person.name}</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {person.professionalHeadline}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+
+          {showPagination && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={handlePageChange}
+                color="primary"
+                sx={{ 
+                  '& .MuiPaginationItem-root': {
+                    color: 'white',
+                    '&.Mui-selected': {
+                      backgroundColor: 'white',
+                      color: 'primary.main',
+                    },
+                  },
+                }}
               />
-              <Typography variant="h6" gutterBottom>
-                {selectedUser.professionalHeadline}
-              </Typography>
-              <Typography variant="body1" color="text.secondary" gutterBottom>
-                {selectedUser.location}
-              </Typography>
-              <Typography variant="body1" paragraph>
-                {selectedUser.summaryOfBio}
-              </Typography>
-              {selectedUser.links && (
-                <Box sx={{ mt: 2 }}>
-                  {selectedUser.links.map((link) => (
-                    <Button
-                      key={link.id}
-                      href={link.address}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      variant="outlined"
-                      size="small"
-                      sx={{ m: 0.5 }}
-                    >
-                      {link.name}
-                    </Button>
-                  ))}
-                </Box>
-              )}
             </Box>
           )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Close</Button>
-        </DialogActions>
-      </Dialog>
+        </>
+      )}
     </Box>
   );
 };

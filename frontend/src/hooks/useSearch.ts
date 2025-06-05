@@ -17,7 +17,12 @@ export const useSearch = () => {
     });
 
     const searchUsers = useCallback(async (name: string) => {
-        setState(prev => ({ ...prev, isLoading: true, error: null }));
+        setState(prev => ({ 
+            ...prev, 
+            isLoading: true, 
+            error: null,
+            searchResults: null // Clear previous results immediately
+        }));
         try {
             const response = await apiService.searchUsers(name);
             if (response.success) {
@@ -29,13 +34,15 @@ export const useSearch = () => {
             } else {
                 setState(prev => ({
                     ...prev,
-                    error: response.message || 'Failed to search users'
+                    error: response.message || 'Failed to search users',
+                    searchResults: null // Ensure results are cleared on error
                 }));
             }
         } catch (error) {
             setState(prev => ({
                 ...prev,
-                error: 'An unexpected error occurred'
+                error: 'An unexpected error occurred',
+                searchResults: null // Ensure results are cleared on error
             }));
         } finally {
             setState(prev => ({ ...prev, isLoading: false }));
