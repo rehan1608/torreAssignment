@@ -1,13 +1,16 @@
 [build]
 nixpacksEnabled = true
 builder = "nixpacks"
-buildCommand = "python -m pip install -r requirements.txt"
 
 [deploy]
-startCommand = "python -m gunicorn app:app"
+startCommand = "gunicorn app:app"
 healthcheckPath = "/api/search/test"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
 
 [service]
-sourceDirectory = "backend" 
+sourceDirectory = "backend"
+
+[variables]
+PYTHON_VERSION = "3.12.0"
+NIXPACKS_PYTHON_VERSION = "3.12.0" 
